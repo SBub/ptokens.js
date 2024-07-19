@@ -125,7 +125,7 @@ export class pTokensSwap {
 
   private monitorInputTransactions(_txHash: string, _origChainId: string): PromiEvent<InnerTransactionStatus[]> {
     const promi = new PromiEvent<InnerTransactionStatus[]>(
-      (resolve) =>
+      (resolve, reject) =>
         (async () => {
           async function getInputTransactions(node: pTokensNode) {
             const resp = await node.getTransactionStatus(_txHash, _origChainId)
@@ -141,7 +141,8 @@ export class pTokensSwap {
                 return true
               }
             } catch (err) {
-              return false
+              reject(err)
+              return true
             }
           }, 1000)
           resolve(resp)
@@ -152,7 +153,7 @@ export class pTokensSwap {
 
   private monitorOutputTransactions(_txHash: string, _origChainId: string): PromiEvent<InnerTransactionStatus[]> {
     const promi = new PromiEvent<InnerTransactionStatus[]>(
-      (resolve) =>
+      (resolve, reject) =>
         (async () => {
           async function getOutputTransactions(node: pTokensNode) {
             const resp = await node.getTransactionStatus(_txHash, _origChainId)
@@ -173,7 +174,8 @@ export class pTokensSwap {
                 return true
               }
             } catch (err) {
-              return false
+              reject(err)
+              return true
             }
           }, 1000)
           resolve(resp)
